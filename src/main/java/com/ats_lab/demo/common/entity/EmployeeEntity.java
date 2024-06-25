@@ -1,6 +1,7 @@
 package com.ats_lab.demo.common.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,8 +19,18 @@ public class EmployeeEntity {
     @Column(name = "emp_code")
     private String empCode;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     @Column(name = "email")
+    @Email
     private String email;
+
+    @Column(name = "mobile_number")
+    private String mobileNumber;
 
     @Column(name = "birth_date")
     private Date birthDate;
