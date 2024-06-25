@@ -16,7 +16,7 @@ public class EmployeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer empId;
 
-    @Column(name = "emp_code")
+    @Column(name = "emp_code" , unique = true)
     private String empCode;
 
     @Column(name = "first_name")
@@ -26,7 +26,6 @@ public class EmployeeEntity {
     private String lastName;
 
     @Column(name = "email")
-    @Email
     private String email;
 
     @Column(name = "mobile_number")

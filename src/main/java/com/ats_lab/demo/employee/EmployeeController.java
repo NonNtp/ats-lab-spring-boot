@@ -1,9 +1,12 @@
 package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
+import com.ats_lab.demo.employee.dto.CreateEmployeeDTO;
+import com.ats_lab.demo.employee.dto.UpdateEmployeeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,14 +38,14 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody EmployeeEntity employee) {
-        EmployeeEntity createdEmployee = employeeService.createEmployee(employee);
-        return ResponseEntity.status(201).body(createdEmployee);
+    public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody CreateEmployeeDTO createEmployeeDTO) {
+        EmployeeEntity createdEmployee = employeeService.createEmployee(createEmployeeDTO);
+        return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
     }
 
     @PutMapping("/{empId}")
-    public ResponseEntity<EmployeeEntity> updateEmployee(@PathVariable Integer empId, @RequestBody EmployeeEntity employee) {
-        EmployeeEntity updatedEmployee = employeeService.updateEmployee(empId, employee);
+    public ResponseEntity<EmployeeEntity> updateEmployee(@PathVariable Integer empId, @RequestBody UpdateEmployeeDTO updateEmployeeDTO) {
+        EmployeeEntity updatedEmployee = employeeService.updateEmployee(empId, updateEmployeeDTO);
         return ResponseEntity.ok(updatedEmployee);
     }
 

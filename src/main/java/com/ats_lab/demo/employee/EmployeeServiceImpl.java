@@ -2,6 +2,8 @@ package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
 import com.ats_lab.demo.common.repository.EmployeeRepository;
+import com.ats_lab.demo.employee.dto.CreateEmployeeDTO;
+import com.ats_lab.demo.employee.dto.UpdateEmployeeDTO;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +19,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository ;
 
+
     @Override
-    public EmployeeEntity createEmployee(EmployeeEntity employee) {
+    public EmployeeEntity createEmployee(CreateEmployeeDTO createEmployeeDTO) {
+        EmployeeEntity employee = new EmployeeEntity();
+        employee.setEmpCode(createEmployeeDTO.getEmpCode());
+        employee.setFirstName(createEmployeeDTO.getFirstName());
+        employee.setLastName(createEmployeeDTO.getLastName());
+        employee.setEmail(createEmployeeDTO.getEmail());
+        employee.setMobileNumber(createEmployeeDTO.getMobileNumber());
+        employee.setBirthDate(createEmployeeDTO.getBirthDate());
+        employee.setGender(createEmployeeDTO.getGender());
+        employee.setCurrentSite(createEmployeeDTO.getCurrentSite());
+        employee.setPositionId(createEmployeeDTO.getPositionId());
+        employee.setBase(createEmployeeDTO.getBase());
+
+
         employee.setCreatedDate(new Date());
         employee.setCreatedBy("admin");
         employee.setUpdatedDate(new Date());
         employee.setUpdatedBy("admin");
+
         return employeeRepository.save(employee);
     }
 
@@ -43,15 +60,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeEntity updateEmployee(Integer empId, EmployeeEntity employee) {
+    public EmployeeEntity updateEmployee(Integer empId, UpdateEmployeeDTO updateEmployeeDTO) {
         EmployeeEntity existingEmployee = employeeRepository.findById(empId)
                 .orElseThrow(() -> new RuntimeException("Employee not found with id: " + empId));
 
-        existingEmployee.setFirstName(employee.getFirstName());
-        existingEmployee.setLastName(employee.getLastName());
-        existingEmployee.setMobileNumber(employee.getMobileNumber());
-        existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setBirthDate(employee.getBirthDate());
+        existingEmployee.setFirstName(updateEmployeeDTO.getFirstName());
+        existingEmployee.setLastName(updateEmployeeDTO.getLastName());
+        existingEmployee.setMobileNumber(updateEmployeeDTO.getMobileNumber());
+        existingEmployee.setEmail(updateEmployeeDTO.getEmail());
+        existingEmployee.setBirthDate(updateEmployeeDTO.getBirthDate());
 
         existingEmployee.setUpdatedDate(new Date());
         existingEmployee.setUpdatedBy("admin");
