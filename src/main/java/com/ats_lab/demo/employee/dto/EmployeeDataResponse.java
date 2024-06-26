@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class CreateEmployeeDTO {
+public class EmployeeDataResponse {
+    private Integer empId;
     private String empCode;
     private String firstName;
     private String lastName;

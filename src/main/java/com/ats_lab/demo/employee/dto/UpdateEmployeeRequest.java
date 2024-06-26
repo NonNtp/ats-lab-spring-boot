@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class UpdateEmployeeDTO {
+public class UpdateEmployeeRequest {
     private String firstName;
     private String lastName;
     private String email;

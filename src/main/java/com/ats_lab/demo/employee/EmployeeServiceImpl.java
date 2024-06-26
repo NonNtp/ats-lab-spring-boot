@@ -2,8 +2,7 @@ package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
 import com.ats_lab.demo.common.repository.EmployeeRepository;
-import com.ats_lab.demo.employee.dto.CreateEmployeeDTO;
-import com.ats_lab.demo.employee.dto.UpdateEmployeeDTO;
+import com.ats_lab.demo.employee.dto.*;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -19,20 +19,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository ;
 
+    @Autowired
+    private EmployeeMapper employeeMapper ;
 
     @Override
-    public EmployeeEntity createEmployee(CreateEmployeeDTO createEmployeeDTO) {
+    public EmployeeEntity createEmployee(CreateEmployeeRequest createEmployeeRequest) {
         EmployeeEntity employee = new EmployeeEntity();
-        employee.setEmpCode(createEmployeeDTO.getEmpCode());
-        employee.setFirstName(createEmployeeDTO.getFirstName());
-        employee.setLastName(createEmployeeDTO.getLastName());
-        employee.setEmail(createEmployeeDTO.getEmail());
-        employee.setMobileNumber(createEmployeeDTO.getMobileNumber());
-        employee.setBirthDate(createEmployeeDTO.getBirthDate());
-        employee.setGender(createEmployeeDTO.getGender());
-        employee.setCurrentSite(createEmployeeDTO.getCurrentSite());
-        employee.setPositionId(createEmployeeDTO.getPositionId());
-        employee.setBase(createEmployeeDTO.getBase());
+        employee.setEmpCode(createEmployeeRequest.getEmpCode());
+        employee.setFirstName(createEmployeeRequest.getFirstName());
+        employee.setLastName(createEmployeeRequest.getLastName());
+        employee.setEmail(createEmployeeRequest.getEmail());
+        employee.setMobileNumber(createEmployeeRequest.getMobileNumber());
+        employee.setBirthDate(createEmployeeRequest.getBirthDate());
+        employee.setGender(createEmployeeRequest.getGender());
+        employee.setCurrentSite(createEmployeeRequest.getCurrentSite());
+        employee.setPositionId(createEmployeeRequest.getPositionId());
+        employee.setBase(createEmployeeRequest.getBase());
 
 
         employee.setCreatedDate(new Date());
@@ -44,13 +46,31 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeEntity> getAllEmployee() {
-        return employeeRepository.findAll();
+    public EmployeeListResponse getAllEmployee() {
+        List<EmployeeEntity> employeeEntityList = employeeRepository.findAll();
+
+        List<EmployeeDataResponse> employeeDataResponseList = employeeEntityList.stream().map(employeeEntity -> employeeMapper.mapEmployeeEntityToEmployeeDataResponse(employeeEntity)).toList();
+
+        EmployeeListDataResponse employeeListDataResponse = new EmployeeListDataResponse();
+        employeeListDataResponse.setEmployeeDataResponseList(employeeDataResponseList);
+
+        EmployeeListResponse employeeListResponse = new EmployeeListResponse();
+        employeeListResponse.setData(employeeListDataResponse);
+
+        return employeeListResponse ;
     }
 
     @Override
-    public EmployeeEntity getEmployeeByEmpId(Integer empId) {
-        return employeeRepository.findById(empId).orElseThrow(() -> new RuntimeException("Employee not found with id: " + empId));
+    public EmployeeResponse getEmployeeByEmpId(Integer empId) {
+        EmployeeResponse employeeResponse = new EmployeeResponse();
+        EmployeeEntity employeeEntity = employeeRepository.findById(empId).orElseThrow(null);
+
+        if (employeeEntity != null) {
+            employeeResponse.setData(employeeMapper.mapEmployeeEntityToEmployeeDataResponse(
+                    employeeEntity
+            ));
+        }
+        return employeeResponse;
     }
 
     @Override
@@ -60,15 +80,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeEntity updateEmployee(Integer empId, UpdateEmployeeDTO updateEmployeeDTO) {
+    public EmployeeEntity updateEmployee(Integer empId, UpdateEmployeeRequest updateEmployeeRequest) {
         EmployeeEntity existingEmployee = employeeRepository.findById(empId)
                 .orElseThrow(() -> new RuntimeException("Employee not found with id: " + empId));
 
-        existingEmployee.setFirstName(updateEmployeeDTO.getFirstName());
-        existingEmployee.setLastName(updateEmployeeDTO.getLastName());
-        existingEmployee.setMobileNumber(updateEmployeeDTO.getMobileNumber());
-        existingEmployee.setEmail(updateEmployeeDTO.getEmail());
-        existingEmployee.setBirthDate(updateEmployeeDTO.getBirthDate());
+        existingEmployee.setFirstName(updateEmployeeRequest.getFirstName());
+        existingEmployee.setLastName(updateEmployeeRequest.getLastName());
+        existingEmployee.setMobileNumber(updateEmployeeRequest.getMobileNumber());
+        existingEmployee.setEmail(updateEmployeeRequest.getEmail());
+        existingEmployee.setBirthDate(updateEmployeeRequest.getBirthDate());
 
         existingEmployee.setUpdatedDate(new Date());
         existingEmployee.setUpdatedBy("admin");

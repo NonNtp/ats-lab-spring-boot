@@ -1,8 +1,10 @@
 package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
-import com.ats_lab.demo.employee.dto.CreateEmployeeDTO;
-import com.ats_lab.demo.employee.dto.UpdateEmployeeDTO;
+import com.ats_lab.demo.employee.dto.CreateEmployeeRequest;
+import com.ats_lab.demo.employee.dto.EmployeeListResponse;
+import com.ats_lab.demo.employee.dto.EmployeeResponse;
+import com.ats_lab.demo.employee.dto.UpdateEmployeeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,13 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     @GetMapping
-    public ResponseEntity<List<EmployeeEntity>> getAllEmployee() {
+    public ResponseEntity<EmployeeListResponse> getAllEmployee() {
         return ResponseEntity.ok(employeeService.getAllEmployee());
     }
 
     @GetMapping("/{empId}")
-    public ResponseEntity<EmployeeEntity> getEmployeeByEmpId(@PathVariable Integer empId) {
-        EmployeeEntity employee = employeeService.getEmployeeByEmpId(empId);
-        return ResponseEntity.ok(employee);
+    public ResponseEntity<EmployeeResponse> getEmployeeByEmpId(@PathVariable Integer empId) {
+        return ResponseEntity.ok(employeeService.getEmployeeByEmpId(empId));
     }
 
     @GetMapping("/search")
@@ -38,14 +39,14 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody CreateEmployeeDTO createEmployeeDTO) {
-        EmployeeEntity createdEmployee = employeeService.createEmployee(createEmployeeDTO);
+    public ResponseEntity<EmployeeEntity> createEmployee(@RequestBody CreateEmployeeRequest createEmployeeRequest) {
+        EmployeeEntity createdEmployee = employeeService.createEmployee(createEmployeeRequest);
         return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
     }
 
     @PutMapping("/{empId}")
-    public ResponseEntity<EmployeeEntity> updateEmployee(@PathVariable Integer empId, @RequestBody UpdateEmployeeDTO updateEmployeeDTO) {
-        EmployeeEntity updatedEmployee = employeeService.updateEmployee(empId, updateEmployeeDTO);
+    public ResponseEntity<EmployeeEntity> updateEmployee(@PathVariable Integer empId, @RequestBody UpdateEmployeeRequest updateEmployeeRequest) {
+        EmployeeEntity updatedEmployee = employeeService.updateEmployee(empId, updateEmployeeRequest);
         return ResponseEntity.ok(updatedEmployee);
     }
 
