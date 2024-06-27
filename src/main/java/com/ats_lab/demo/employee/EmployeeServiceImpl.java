@@ -1,6 +1,7 @@
 package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
+import com.ats_lab.demo.common.exception.ResourceNotFoundException;
 import com.ats_lab.demo.common.repository.EmployeeRepository;
 import com.ats_lab.demo.employee.dto.*;
 import lombok.Setter;
@@ -63,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse getEmployeeByEmpId(Integer empId) {
         EmployeeResponse employeeResponse = new EmployeeResponse();
-        EmployeeEntity employeeEntity = employeeRepository.findById(empId).orElseThrow(null);
+        EmployeeEntity employeeEntity = employeeRepository.findById(empId).orElseThrow(() -> new ResourceNotFoundException("Employee", "employee Id", empId.toString()));
 
         if (employeeEntity != null) {
             employeeResponse.setData(employeeMapper.mapEmployeeEntityToEmployeeDataResponse(
@@ -76,13 +77,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Optional<EmployeeEntity> getEmployeeByEmpCode(String empCode) {
         Optional<EmployeeEntity> employee = Optional.ofNullable(employeeRepository.findByEmpCode(empCode));
-        return Optional.ofNullable(employee.orElseThrow(() -> new RuntimeException("Employee not found with empCode" + empCode)));
+        return Optional.ofNullable(employee.orElseThrow(() -> new ResourceNotFoundException("employee", "employee code", empCode)));
     }
 
     @Override
     public EmployeeEntity updateEmployee(Integer empId, UpdateEmployeeRequest updateEmployeeRequest) {
         EmployeeEntity existingEmployee = employeeRepository.findById(empId)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + empId));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "employee Id", empId.toString()));
 
         existingEmployee.setFirstName(updateEmployeeRequest.getFirstName());
         existingEmployee.setLastName(updateEmployeeRequest.getLastName());
@@ -99,7 +100,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(Integer empId) {
         EmployeeEntity existingEmployee = employeeRepository.findById(empId)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + empId));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "employee Id", empId.toString()));
         employeeRepository.delete(existingEmployee);
     }
 
