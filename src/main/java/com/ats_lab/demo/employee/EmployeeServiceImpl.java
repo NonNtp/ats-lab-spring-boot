@@ -1,9 +1,11 @@
 package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
+import com.ats_lab.demo.common.entity.PositionEntity;
 import com.ats_lab.demo.common.entity.custommodel.EmpPositionCustomEntity;
 import com.ats_lab.demo.common.repository.EmpPositionCustomRepository;
 import com.ats_lab.demo.common.repository.EmployeeRepository;
+import com.ats_lab.demo.common.repository.PositionRepository;
 import com.ats_lab.demo.employee.dto.*;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +14,13 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 @Service
 @Setter(onMethod_ = @Autowired)
 public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
+    private PositionRepository positionRepository;
 
     private EmpPositionCustomRepository empPositionCustomRepository;
 
@@ -112,5 +113,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmpPositionCustomEntity empPositionCustomEntity = empPositionCustomRepository.findByEmpCode(empCode);
 
         return employeeMapper.mapEmpPositionCustomEntityToEmpPositionResponse(empPositionCustomEntity);
+    }
+
+    @Override
+    public EmpPositionResponse getEmpPositionByEmpId(Integer empId) {
+        EmployeeEntity employeeEntity = employeeRepository.findByEmpId(empId);
+        PositionEntity positionEntity = positionRepository.findByPositionId(employeeEntity.getPositionId());
+
+        return employeeMapper.mapEmployeeEntityAndPositionEntityToEmpPositionResponse(employeeEntity , positionEntity);
+//        return employeeMapper.mapEmployeeEntityAndPositionEntityToEmpPositionResponse(employeeEntity , positionEntity.getPositionName() , positionEntity.getPositionTypeName());
     }
 }

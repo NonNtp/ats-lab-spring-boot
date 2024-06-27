@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -54,9 +53,14 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/getEmp/{empCode}")
+    @GetMapping("/getempcode/{empCode}")
     public ResponseEntity<EmpPositionResponse> getEmpPosition(@PathVariable("empCode") String empCode) {
         return ResponseEntity.ok(employeeService.getEmpPosition(empCode));
+    }
+
+    @GetMapping("/getempid/{empId}")
+    public ResponseEntity<EmpPositionResponse> getEmpPositionByEmpId(@PathVariable("empId") Integer empId) {
+        return ResponseEntity.ok(employeeService.getEmpPositionByEmpId(empId));
     }
 
 }
