@@ -1,6 +1,8 @@
 package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
+import com.ats_lab.demo.common.entity.custommodel.EmpPositionCustomEntity;
+import com.ats_lab.demo.common.repository.EmpPositionCustomRepository;
 import com.ats_lab.demo.common.repository.EmployeeRepository;
 import com.ats_lab.demo.employee.dto.*;
 import lombok.Setter;
@@ -17,10 +19,11 @@ import java.util.stream.Collectors;
 @Setter(onMethod_ = @Autowired)
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeRepository employeeRepository ;
+    private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private EmployeeMapper employeeMapper ;
+    private EmpPositionCustomRepository empPositionCustomRepository;
+
+    private EmployeeMapper employeeMapper;
 
     @Override
     public EmployeeEntity createEmployee(CreateEmployeeRequest createEmployeeRequest) {
@@ -57,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeListResponse employeeListResponse = new EmployeeListResponse();
         employeeListResponse.setData(employeeListDataResponse);
 
-        return employeeListResponse ;
+        return employeeListResponse;
     }
 
     @Override
@@ -103,5 +106,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.delete(existingEmployee);
     }
 
+    @Override
+    public EmpPositionResponse getEmpPosition(String empCode) {
 
+        EmpPositionCustomEntity empPositionCustomEntity = empPositionCustomRepository.findByEmpCode(empCode);
+
+        return employeeMapper.mapEmpPositionCustomEntityToEmpPositionResponse(empPositionCustomEntity);
+    }
 }

@@ -1,10 +1,7 @@
 package com.ats_lab.demo.employee;
 
 import com.ats_lab.demo.common.entity.EmployeeEntity;
-import com.ats_lab.demo.employee.dto.CreateEmployeeRequest;
-import com.ats_lab.demo.employee.dto.EmployeeListResponse;
-import com.ats_lab.demo.employee.dto.EmployeeResponse;
-import com.ats_lab.demo.employee.dto.UpdateEmployeeRequest;
+import com.ats_lab.demo.employee.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +19,7 @@ import java.util.Optional;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
     @GetMapping
     public ResponseEntity<EmployeeListResponse> getAllEmployee() {
         return ResponseEntity.ok(employeeService.getAllEmployee());
@@ -54,6 +52,11 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable Integer empId) {
         employeeService.deleteEmployee(empId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/getEmp/{empCode}")
+    public ResponseEntity<EmpPositionResponse> getEmpPosition(@PathVariable("empCode") String empCode) {
+        return ResponseEntity.ok(employeeService.getEmpPosition(empCode));
     }
 
 }
